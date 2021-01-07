@@ -1,9 +1,22 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  font-size: 100px;
+  text-align: center;
+}
+
 table {
   height: 40rem;
   width: 45rem;
   margin: auto;
   border: 2px solid black;
   background-color: #009dff;
+  border-spacing: 10px!important;
 }
 
 td {
@@ -11,6 +24,15 @@ td {
   height: 10px;
   border: 2px solid black;
   border-radius: 50%;
+}
+
+button {
+  margin-top: 5rem;
+  margin-left: 44.5%;
+}
+
+.message {
+  text-align: center;
 }
 
 .yellow {

@@ -53,8 +53,10 @@ var App = /*#__PURE__*/function (_Component) {
       player: null,
       player1: 1,
       player2: 2,
-      play: false
+      play: false,
+      message: ''
     };
+    _this.createBoard = _this.createBoard.bind(_assertThisInitialized(_this));
     _this.processTurn = _this.processTurn.bind(_assertThisInitialized(_this));
     return _this;
   }
@@ -101,26 +103,125 @@ var App = /*#__PURE__*/function (_Component) {
             board[row][col] = this.state.player;
             break;
           }
-        }
+        } // handle all checks for wins, tie, continue, or done
 
-        this.setState({
+
+        var res = this.checkAll(board);
+        res === this.state.player1 ? this.setState({
+          board: board,
+          play: false,
+          message: 'Player 1 wins!'
+        }) : res === this.state.player2 ? this.setState({
+          board: board,
+          play: false,
+          message: 'Player 2 wins!'
+        }) : res === 'stalemate' ? this.setState({
+          board: board,
+          play: false,
+          message: 'Stalemate!'
+        }) : this.setState({
           board: board,
           player: this.togglePlayer()
         });
+      } else {
+        this.setState({
+          message: 'Game over! New Game?'
+        });
       }
+    }
+  }, {
+    key: "checkVertical",
+    value: function checkVertical(board) {
+      // skip first 3 rows
+      for (var r = 3; r < 6; r++) {
+        for (var c = 0; c < 7; c++) {
+          if (board[r][c]) {
+            if (board[r][c] === board[r - 1][c] && board[r][c] === board[r - 2][c] && board[r][c] === board[r - 3][c]) {
+              return board[r][c];
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: "checkHorizontal",
+    value: function checkHorizontal(board) {
+      // skip last two columns
+      for (var r = 0; r < 6; r++) {
+        for (var c = 0; c < 4; c++) {
+          if (board[r][c]) {
+            if (board[r][c] === board[r][c + 1] && board[r][c] === board[r][c + 2] && board[r][c] === board[r][c + 3]) {
+              return board[r][c];
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: "checkDiagonalRight",
+    value: function checkDiagonalRight(board) {
+      // skip first 3 rows, last 2 columns
+      for (var r = 3; r < 6; r++) {
+        for (var c = 0; c < 4; c++) {
+          if (board[r][c]) {
+            if (board[r][c] === board[r - 1][c + 1] && board[r][c] === board[r - 2][c + 2] && board[r][c] === board[r - 3][c + 3]) {
+              return board[r][c];
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: "checkDiagonalLeft",
+    value: function checkDiagonalLeft(board) {
+      // skip first 3 rows, first 3 columns
+      for (var r = 3; r < 6; r++) {
+        for (var c = 3; c < 7; c++) {
+          if (board[r][c]) {
+            if (board[r][c] === board[r - 1][c - 1] && board[r][c] === board[r - 2][c - 2] && board[r][c] === board[r - 3][c - 3]) {
+              return board[r][c];
+            }
+          }
+        }
+      }
+    }
+  }, {
+    key: "checkDraw",
+    value: function checkDraw(board) {
+      for (var r = 0; r < 6; r++) {
+        for (var c = 0; c < 7; c++) {
+          if (board[r][c] === 0) {
+            return 0;
+          }
+        }
+      }
+
+      return 'stalemate';
+    }
+  }, {
+    key: "checkAll",
+    value: function checkAll(board) {
+      // 
+      return this.checkVertical(board) || this.checkDiagonalRight(board) || this.checkDiagonalLeft(board) || this.checkHorizontal(board) || this.checkDraw(board);
     }
   }, {
     key: "render",
     value: function render() {
       var _this2 = this;
 
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.state.board.map(function (row, i) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h1", null, "CONNECT FOUR"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.state.board.map(function (row, i) {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Row, {
           key: i,
           row: row,
           processTurn: _this2.processTurn
         });
-      })));
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+        onClick: function onClick() {
+          _this2.createBoard();
+        }
+      }, "New Game"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        className: "message"
+      }, this.state.message));
     }
   }]);
 
