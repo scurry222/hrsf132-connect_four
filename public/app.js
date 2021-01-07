@@ -43,15 +43,59 @@ var App = /*#__PURE__*/function (_Component) {
   var _super = _createSuper(App);
 
   function App(props) {
+    var _this;
+
     _classCallCheck(this, App);
 
-    return _super.call(this, props);
+    _this = _super.call(this, props);
+    _this.state = {
+      board: [],
+      player: null,
+      player1: 1,
+      player2: 2
+    };
+    return _this;
   }
 
   _createClass(App, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.createBoard();
+    }
+  }, {
+    key: "createBoard",
+    value: function createBoard() {
+      var board = [];
+
+      for (var i = 0; i < 6; i++) {
+        var row = [];
+
+        for (var j = 0; j < 7; j++) {
+          row.push(0);
+        }
+
+        board.push(row);
+      }
+
+      this.setState({
+        board: board,
+        player: this.state.player1
+      });
+    }
+  }, {
+    key: "togglePlayer",
+    value: function togglePlayer() {
+      return this.state.player === 1 ? this.state.player2 : this.state.player1;
+    }
+  }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "React Loaded!");
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.state.board.map(function (row, i) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Row, {
+          key: i,
+          row: row
+        });
+      })));
     }
   }]);
 
@@ -59,6 +103,28 @@ var App = /*#__PURE__*/function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__.Component);
 
 
+
+var Row = function Row(_ref) {
+  var row = _ref.row;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null, row.map(function (cell, i) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Cell, {
+      key: i,
+      value: cell,
+      columnIndex: i
+    });
+  }));
+};
+
+var Cell = function Cell(_ref2) {
+  var value = _ref2.value,
+      columnIndex = _ref2.columnIndex;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", {
+    className: "cell",
+    onClick: function onClick() {
+      return console.log('clicked!', columnIndex);
+    }
+  });
+};
 
 /***/ }),
 
