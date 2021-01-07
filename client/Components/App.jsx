@@ -7,8 +7,10 @@ export default class App extends Component {
       board: [],
       player: null,
       player1: 1,
-      player2: 2
+      player2: 2,
+      play: false
     }
+    this.processTurn = this.processTurn.bind(this);
   }
 
   componentDidMount() {
@@ -26,7 +28,8 @@ export default class App extends Component {
     }
     this.setState({
       board,
-      player: this.state.player1
+      player: this.state.player1,
+      play: true
     })
   }
 
@@ -34,23 +37,43 @@ export default class App extends Component {
     return this.state.player === 1 ? this.state.player2 : this.state.player1; 
   }
 
+  processTurn(col) {
+    if (this.state.play) {
+      let board = this.state.board;
+      for (let row = 5; row >=0; row--) {
+        if (!board[row][col]) {
+          board[row][col] = this.state.player;
+          break;
+        }
+      }
+      this.setState({ board, player: this.togglePlayer() })
+    }
+  }
+
   render() {
     return (
       <table>
         <thead></thead>
         <tbody>
-          {this.state.board.map((row, i) => (<Row key={i} row={row} />))}
+          {this.state.board.map((row, i) => (<Row key={i} row={row} processTurn={this.processTurn} />))}
         </tbody>
       </table>
     )
   }
 }
 
-const Row = ({row}) => 
+const Row = ({row, processTurn}) => 
   <tr>
-    {row.map((cell, i) => <Cell key={i} value={cell} columnIndex={i} />)}
+    {row.map((cell, i) => <Cell key={i} value={cell} columnIndex={i} processTurn={processTurn} />)}
   </tr>
 
-const Cell = ({value, columnIndex}) =>
-  <td className="cell" onClick={() => console.log('clicked!', columnIndex)}>
+const Cell = ({value, columnIndex, processTurn}) => 
+  <td className={
+    value === 1
+    ? 'red'
+    : value === 2
+    ? 'yellow'
+    : 'white'
+   } onClick={() => processTurn(columnIndex)}>
+
   </td>
